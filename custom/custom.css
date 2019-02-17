@@ -1,0 +1,39 @@
+/*
+Error: Invalid CSS after "$nav-bar": expected ":", was "$navbar-dark-co..."
+        on line 32 of custom.scss
+
+27: $card-border-color: $dark;
+28: $card-cap-bg: $lawo_mittelgrau;
+29: $nav-tabs-border-color: $lawo_hellgrau;
+30: 
+31: $nav-bar
+32: $navbar-dark-color: $lawo_cyan;
+33: $navbar-dark-hover-color: $lawo_blau;
+34: $navbar-dark-active-color: $white;
+35: $navbar-dark-disabled-color: $secondary;
+
+Backtrace:
+custom.scss:32
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:1278:in `expected'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:1208:in `expected'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:1203:in `tok!'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:640:in `variable'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:696:in `block_child'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:689:in `block_contents'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:137:in `stylesheet'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/scss/parser.rb:41:in `parse'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/engine.rb:414:in `_to_tree'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/engine.rb:389:in `_render_with_sourcemap'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/engine.rb:307:in `render_with_sourcemap'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/sass_scss.rb:391:in `run'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/sass_scss.rb:63:in `process_result'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/base.rb:52:in `parse'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/base.rb:19:in `parse!'
+C:/Ruby24-x64/lib/ruby/gems/2.4.0/gems/sass-3.5.6/bin/sass:13:in `<top (required)>'
+C:/Ruby24-x64/bin/sass:23:in `load'
+C:/Ruby24-x64/bin/sass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"$nav-bar\": expected \":\", was \"$navbar-dark-co...\"\A         on line 32 of custom.scss\A \A 27: $card-border-color: $dark;\A 28: $card-cap-bg: $lawo_mittelgrau;\A 29: $nav-tabs-border-color: $lawo_hellgrau;\A 30: \A 31: $nav-bar\A 32: $navbar-dark-color: $lawo_cyan;\A 33: $navbar-dark-hover-color: $lawo_blau;\A 34: $navbar-dark-active-color: $white;\A 35: $navbar-dark-disabled-color: $secondary;"; }
