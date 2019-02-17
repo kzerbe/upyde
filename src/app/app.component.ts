@@ -1,5 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef, AfterViewChecked} from '@angular/core';
 import { WebREPL } from 'webrepl-client/webrepl.js';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ConnectDialogComponent} from './connect_dialog.component';
 
 enum ScanState {
   off,
@@ -8,14 +10,27 @@ enum ScanState {
   complete
 }
 
+interface Account {
+  address: string;
+  password: string;
+}
+
 const NEW_FILE = 'new_file.py';
+const ACCOUNT_STORE = 'credentials';
 
 @Component({
   selector: 'app-root',
   template: `<div class="container-fluid">
     <div class="card">
       <div class="card-header">
-        <h3>{{title}}</h3>
+        <h3 [innerHTML]="title"></h3>
+        <span *ngIf="hasAccount;else noconnection">connected to: {{account.address}}&nbsp;
+          <button type="button" class="btn btn-primary btn-sm" (click)="onDisconnect()">Disconnect</button>
+        </span>
+        <ng-template #noconnection>
+          <span >no connection &nbsp; 
+            <button type="button" class="btn btn-sm btn-primary" (click)="onConnect()">Connect</button> </span>
+        </ng-template>
       </div>
       <div class="card-body">
         <ul class="list-inline">
@@ -44,7 +59,7 @@ const NEW_FILE = 'new_file.py';
           <button type="button" class="btn btn-primary input-group-append"
                   [hidden]="!authenticated" (click)="onReset()">Reset</button>
         </div>
-        <textarea #outputpane rows="8" class="form-control">{{output}}</textarea>
+        <textarea #outputpane rows="8" class="form-control" readonly>{{output}}</textarea>
       </div>
     </div>
   </div>
@@ -52,7 +67,7 @@ const NEW_FILE = 'new_file.py';
   styles: ['.editor-fnc {background-color: gray}']
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
-  title = 'MicroPython IDE';
+  title = '&#x03BC;PyDE : The easy MicroPython IDE';
   content = '# write new Micropython code here';
   repl: WebREPL;
   authenticated = false;
@@ -63,14 +78,57 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit, AfterView
   scannedDir: string;
   fileList: string[] = [];
   editFile = '';
+  account = {address: '', password: ''} as Account;
 
   @ViewChild('cmd') cmd: ElementRef;
   @ViewChild('outputpane') outputpane: ElementRef;
 
+  constructor(private modalService: NgbModal) {
+
+  }
+
+  get hasAccount() {
+    return this.account && !!this.account.address && !!this.account.password;
+  }
+
   ngOnInit(): void {
+    this.account = JSON.parse(localStorage.getItem(ACCOUNT_STORE));
+    if (this.hasAccount) {
+      this.connect(this.account.address, this.account.password);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.authenticated) {
+      this.repl.disconnect();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.cmd.nativeElement.focus();
+  }
+
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
+
+  onConnect() {
+    this.modalService.open(ConnectDialogComponent).result.then(connectData => {
+      this.connect(connectData.address, connectData.password);
+    }, () => {
+    });
+  }
+
+  onDisconnect() {
+    this.repl.disconnect();
+    localStorage.removeItem(ACCOUNT_STORE);
+    location.reload();
+  }
+
+  connect(address: string, password: string) {
     this.repl = new WebREPL({
-      ip: '192.168.1.103',
-      password: 'max2day',
+      ip: address,
+      password: password,
       autoConnect: true,
       autoAuth: true,
       timeout: 5000
@@ -78,6 +136,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit, AfterView
 
     this.repl.on('authenticated', () => {
       this.authenticated = true;
+      this.account = { address: address, password: password}
+      localStorage.setItem(ACCOUNT_STORE, JSON.stringify(this.account));
       this.getdir();
     });
 
@@ -109,21 +169,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit, AfterView
         }
       }
     });
+
   }
 
-  ngOnDestroy(): void {
-    if (this.authenticated) {
-      this.repl.disconnect();
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.cmd.nativeElement.focus();
-  }
-
-  ngAfterViewChecked(): void {
-    this.scrollToBottom();
-  }
 
   onExec() {
     this.repl.eval(`${this.command}\r`);
